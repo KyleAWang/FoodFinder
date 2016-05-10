@@ -9,7 +9,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,6 +27,7 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.wang.kyle.foodfinder.R;
 import com.wang.kyle.foodfinder.module.MyItem;
 import com.wang.kyle.foodfinder.module.Place;
+import com.wang.kyle.foodfinder.util.AnalyticsApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +44,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double curLon;
     private double radius;
     private ClusterManager<MyItem> mClusterManager;
+    private Tracker mTracker;
+    private final static String name="Map Activity";
+    private static final String TAG = "MapsActivity";
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
         if (getIntent().getExtras() != null) {
             mPlaces = (List<Place>) getIntent().getExtras().getSerializable("places");
             curLan = getIntent().getDoubleExtra("lan", 0);
@@ -64,6 +73,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "Setting screen name: " + name);
+        mTracker.setScreenName("Image~" + name);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     public static Intent newIntent(Context packageContext, List<Place> places, double lan, double lon, double radius) {
@@ -166,6 +183,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         list.add(myItem.getPlaceId());
         Intent intent = PlaceDetailActivity.newIntent(this, list, myItem.getPlaceId() );
         startActivity(intent);
+
+        mTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Action")
+                .setAction("mapInfoWin:" + myItem.getTitle())
+                .build());
     }
 
 

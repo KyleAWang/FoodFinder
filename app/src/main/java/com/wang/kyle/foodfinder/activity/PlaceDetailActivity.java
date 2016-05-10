@@ -9,10 +9,14 @@ import android.support.v4.util.LruCache;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.wang.kyle.foodfinder.R;
 import com.wang.kyle.foodfinder.adapter.DetailPageAdapter;
 import com.wang.kyle.foodfinder.fragment.PlaceDetailFragment;
+import com.wang.kyle.foodfinder.util.AnalyticsApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +29,9 @@ public class PlaceDetailActivity extends AppCompatActivity {
     public LruCache<String, Bitmap> getMemoryCache() {
         return mMemoryCache;
     }
+    private final static String name="PlaceDetailActivity";
+    private static final String TAG = "PlaceDetailActivity";
+    private Tracker mTracker;
 
     public static Intent newIntent(Context packageContext, List<String> placeIds, String placeId){
         Intent intent = new Intent(packageContext, PlaceDetailActivity.class);
@@ -33,6 +40,14 @@ public class PlaceDetailActivity extends AppCompatActivity {
         bundle.putSerializable("placeIds", (ArrayList)placeIds);
         intent.putExtras(bundle);
         return intent;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "Setting screen name: " + name);
+        mTracker.setScreenName("Image~" + name);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
 //    public static Bundle newBundle(List<String> placeIds, String placeId){
@@ -46,6 +61,9 @@ public class PlaceDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+
         setContentView(R.layout.activity_place_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
