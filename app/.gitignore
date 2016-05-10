@@ -1,0 +1,6 @@
+/build
+
+#google service files
+google-services.json
+AndroidManifest.xml
+google_maps_api.xml
