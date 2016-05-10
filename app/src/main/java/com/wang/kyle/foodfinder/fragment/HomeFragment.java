@@ -19,6 +19,8 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -29,6 +31,7 @@ import com.wang.kyle.foodfinder.activity.PlacesListActivity;
 import com.wang.kyle.foodfinder.adapter.SuggestionAdapter;
 import com.wang.kyle.foodfinder.module.PlaceSearchRequest;
 import com.wang.kyle.foodfinder.module.Prediction;
+import com.wang.kyle.foodfinder.util.AnalyticsApplication;
 
 /**
  * Created by Kyle on 5/2/2016.
@@ -41,6 +44,28 @@ public class HomeFragment extends BaseFragment
     GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private LocationRequest mLocationRequest;
+    private Tracker mTracker;
+    private final static String name = "Home Fragment";
+
+    public void setLastLocation(Location lastLocation) {
+        mLastLocation = lastLocation;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "Setting screen name: " + name);
+        mTracker.setScreenName("Image~" + name);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
+    }
 
     @Nullable
     @Override
@@ -68,7 +93,6 @@ public class HomeFragment extends BaseFragment
                 placeSearchRequest.setType("restaurant");
                 Intent i = PlacesListActivity.newIntent(mContext, placeSearchRequest);
                 startActivity(i);
-                Log.d(TAG, prediction.getDescription());
             }
         });
 
@@ -77,6 +101,10 @@ public class HomeFragment extends BaseFragment
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     startPlaceList(v.getText().toString());
+                    mTracker.send(new HitBuilders.EventBuilder()
+                            .setCategory("Action")
+                            .setAction("Search_keyboard")
+                            .build());
                     return true;
                 }
                 return false;
@@ -89,7 +117,6 @@ public class HomeFragment extends BaseFragment
 
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 408);
-//            return;
         }
 
         // Create the LocationRequest object
@@ -110,6 +137,10 @@ public class HomeFragment extends BaseFragment
             @Override
             public void onClick(View v) {
                 startPlaceList("restaurant");
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("restaurant")
+                        .build());
             }
         });
         TextView view1 = (TextView) v.findViewById(R.id.txt1);
@@ -117,6 +148,10 @@ public class HomeFragment extends BaseFragment
             @Override
             public void onClick(View v) {
                 startPlaceList("pizza");
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("pizza")
+                        .build());
             }
         });
         TextView view2 = (TextView) v.findViewById(R.id.txt2);
@@ -124,6 +159,10 @@ public class HomeFragment extends BaseFragment
             @Override
             public void onClick(View v) {
                 startPlaceList("cafe");
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("cafe")
+                        .build());
             }
         });
         TextView view3 = (TextView) v.findViewById(R.id.txt3);
@@ -131,6 +170,10 @@ public class HomeFragment extends BaseFragment
             @Override
             public void onClick(View v) {
                 startPlaceList("chinese food");
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("chinese")
+                        .build());
             }
         });
         TextView view4 = (TextView) v.findViewById(R.id.txt4);
@@ -138,6 +181,10 @@ public class HomeFragment extends BaseFragment
             @Override
             public void onClick(View v) {
                 startPlaceList("kebabs");
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("kebabs")
+                        .build());
             }
         });
         TextView view5 = (TextView) v.findViewById(R.id.txt5);
@@ -145,6 +192,10 @@ public class HomeFragment extends BaseFragment
             @Override
             public void onClick(View v) {
                 startPlaceList("steak");
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("steak")
+                        .build());
             }
         });
         TextView view6 = (TextView) v.findViewById(R.id.txt6);
@@ -152,6 +203,10 @@ public class HomeFragment extends BaseFragment
             @Override
             public void onClick(View v) {
                 startPlaceList("pasta");
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("pasta")
+                        .build());
             }
         });
         TextView view7 = (TextView) v.findViewById(R.id.txt7);
@@ -159,6 +214,10 @@ public class HomeFragment extends BaseFragment
             @Override
             public void onClick(View v) {
                 startPlaceList("chicken");
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Action")
+                        .setAction("chicken")
+                        .build());
             }
         });
 

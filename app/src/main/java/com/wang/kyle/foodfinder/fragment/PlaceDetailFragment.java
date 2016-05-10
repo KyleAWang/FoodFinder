@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -37,6 +39,7 @@ import com.wang.kyle.foodfinder.module.PlaceDetailResponse;
 import com.wang.kyle.foodfinder.module.Review;
 import com.wang.kyle.foodfinder.receiver.HttpServiceReceiver;
 import com.wang.kyle.foodfinder.service.HttpIntentService;
+import com.wang.kyle.foodfinder.util.AnalyticsApplication;
 
 import java.util.List;
 
@@ -52,6 +55,8 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
     private List<Review> mReviews;
     private RecyclerView mRecyclerView;
     private LruCache<String, Bitmap> mMemoryCache;
+    private Tracker mTracker;
+    private final static String name="PlaceDetailFragment";
 
     public LruCache<String, Bitmap> getMemoryCache() {
         return mMemoryCache;
@@ -71,8 +76,18 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "Setting screen name: " + name);
+        mTracker.setScreenName("Image~" + name);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
         setRetainInstance(true);
 
     }
@@ -102,6 +117,7 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
             PlaceDetailResponse response = (PlaceDetailResponse) resultData.getSerializable("response");
             mPlaceDetail = response.getResult();
             Log.d(TAG, response.getStatus());
+            buildLayout();
             buildView();
             buildThumbnail(mView);
             mReviews = mPlaceDetail.getReviews();
@@ -158,14 +174,20 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
         }
     }
 
-    private void buildView() {
+    private void buildLayout(){
         if (mPlaceDetail != null) {
             TextView nameText = (TextView) mView.findViewById(R.id.detail_name);
             nameText.setText(mPlaceDetail.getName());
             TextView addressText = (TextView) mView.findViewById(R.id.detail_address);
-            List<PlaceDetail.Address> addresses = mPlaceDetail.getAddress_components();
 
             addressText.setText(mPlaceDetail.getFormatted_address());
+        }
+
+    }
+
+    private void buildView() {
+        if (mPlaceDetail != null) {
+
             FrameLayout frameLayout = (FrameLayout) mView.findViewById(R.id.detail_frame_image);
             LayoutInflater layoutInflater = LayoutInflater.from(mView.getContext());
             if (mPlaceDetail.getPhotos() != null && mPlaceDetail.getPhotos().length > 0) {
@@ -182,14 +204,6 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
                 imgKeyB.append("_");
                 imgKeyB.append(0);
                 loadBitmap(mPlaceDetail.getPhotos()[0].getPhoto_reference(), imgKeyB.toString(), imgView);
-//                    sb_photo.append(mPlaceDetail.getPhotos()[0].getPhoto_reference());
-//                    Picasso.with(getContext())
-//                            .load(sb_photo.toString())
-//                            .resize(200, 200)
-//                            .centerCrop()
-//                            .into(imageView);
-//                new DownloadImageTask(holder.mImageView)
-//                        .execute(sb.toString());
             }else {
                 if(getBitmapFromMemCache(mPlaceDetail.getId()) != null){
                     View imgLView = layoutInflater.inflate(R.layout.image_detail_view, null);
@@ -264,6 +278,7 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
     }
 
     public void loadBitmap(final String imageKey, final String imgId, final ImageView imageView) {
+        Log.d(TAG, "loadBitmap");
         final Bitmap bitmap = getBitmapFromMemCache(imgId);
         if (bitmap != null) {//CoQBcwAAAB_S2g9Kc7nz， CoQBcwAAALFm6l3y_zGS
             imageView.setImageBitmap(bitmap);
@@ -278,6 +293,7 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
                     .into(new Target() {
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            Log.d(TAG, "loadBitmap loaded");
                             if (bitmap != null){
                                 imageView.setImageBitmap(bitmap);
                                 addBitmapToMemoryCache(imgId, bitmap);
@@ -286,7 +302,7 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
 
                         @Override
                         public void onBitmapFailed(Drawable errorDrawable) {
-
+                            Log.d(TAG, "loadBitmap failed");
                         }
 
                         @Override

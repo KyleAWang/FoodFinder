@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -31,6 +33,7 @@ import com.wang.kyle.foodfinder.module.PlaceSearchRequest;
 import com.wang.kyle.foodfinder.module.PlaceSearchResponse;
 import com.wang.kyle.foodfinder.receiver.HttpServiceReceiver;
 import com.wang.kyle.foodfinder.service.HttpIntentService;
+import com.wang.kyle.foodfinder.util.AnalyticsApplication;
 import com.wang.kyle.foodfinder.webservice.ServiceConstants;
 
 import java.util.ArrayList;
@@ -46,14 +49,26 @@ public class PlacesListFragment extends Fragment implements HttpServiceReceiver.
     private RecyclerView mRecyclerView;
     private List<String> placeIds;
     private OnPlacesListener mOnPlacesListener;
+    private Tracker mTracker;
+    private final static String name="PlacesListFragment";
 
 
     public PlacesListFragment() {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "Setting screen name: " + name);
+        mTracker.setScreenName("Image~" + name);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
         setRetainInstance(true);
     }
 
@@ -222,6 +237,10 @@ public class PlacesListFragment extends Fragment implements HttpServiceReceiver.
         @Override
         public void onClick(View v) {
             Intent intent = PlaceDetailActivity.newIntent(getContext(), placeIds, mPlace.getPlace_id());
+            mTracker.send(new HitBuilders.EventBuilder()
+                    .setCategory("Action")
+                    .setAction("list:"+mPlace.getName())
+                    .build());
             startActivity(intent);
 
         }
