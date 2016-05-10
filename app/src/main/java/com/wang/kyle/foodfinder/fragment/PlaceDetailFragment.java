@@ -277,7 +277,35 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
         }
     }
 
-    public void loadBitmap(final String imageKey, final String imgId, final ImageView imageView) {
+    private class MyTarget implements Target {
+        ImageView mImageView;
+        String mImgId;
+        public MyTarget(ImageView imageView, String imgId) {
+            mImageView = imageView;
+            mImgId = imgId;
+        }
+
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            if (bitmap != null){
+                mImageView.setImageBitmap(bitmap);
+                addBitmapToMemoryCache(mImgId, bitmap);
+            }
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+        }
+    }
+
+
+    public void loadBitmap( String imageKey,  String imgId, ImageView imageView) {
         Log.d(TAG, "loadBitmap");
         final Bitmap bitmap = getBitmapFromMemCache(imgId);
         if (bitmap != null) {//CoQBcwAAAB_S2g9Kc7nz， CoQBcwAAALFm6l3y_zGS
@@ -285,33 +313,18 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
         } else {
             final StringBuffer sb_photo = new StringBuffer(imgUrl);
             sb_photo.append(imageKey);
+            MyTarget myTarget = new MyTarget(imageView, imgId);
             Picasso.with(getContext())
                     .load(sb_photo.toString())
                     .resize(200, 200)
                     .placeholder(R.drawable.progress_animation)
                     .centerCrop()
-                    .into(new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            Log.d(TAG, "loadBitmap loaded");
-                            if (bitmap != null){
-                                imageView.setImageBitmap(bitmap);
-                                addBitmapToMemoryCache(imgId, bitmap);
-                            }
-                        }
-
-                        @Override
-                        public void onBitmapFailed(Drawable errorDrawable) {
-                            Log.d(TAG, "loadBitmap failed");
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                        }
-                    });
+                    .into(imageView);
+//                    .into(myTarget);
         }
     }
+
+
 
     public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
         if (mMemoryCache != null && getBitmapFromMemCache(key) == null) {

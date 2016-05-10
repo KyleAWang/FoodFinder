@@ -1,15 +1,15 @@
 <resources>
-    <string name="app_name">FoodFinder</string>
+    <string name="app_name">Food Finder</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_test">TestActivity</string>
 
-    <string name="google_app_id">Food Finder</string>
+    <!--<string name="google_app_id">Food Finder</string>-->
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
         <item></item>
         <item>Home</item>
-        <item>My Info</item>
+        <item>Find Nearby Restaurant</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
