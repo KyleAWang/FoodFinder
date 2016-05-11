@@ -13,4 +13,6 @@
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
     <color name="text_default_color">#000000</color>
+    <color name="button_normal">#999999</color>
+    <color name="button_pressed">#cccccc</color>
 </resources>

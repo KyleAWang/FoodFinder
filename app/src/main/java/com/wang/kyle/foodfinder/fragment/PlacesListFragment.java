@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -42,7 +41,7 @@ import java.util.List;
 /**
  * Created by Kyle on 5/4/2016.
  */
-public class PlacesListFragment extends Fragment implements HttpServiceReceiver.Listener {
+public class PlacesListFragment extends BaseFragment implements HttpServiceReceiver.Listener {
     private final static String TAG = "PlacesListFragment";
     private PlaceSearchRequest mPlaceSearchRequest;
     private List<Place> mPlaces = null;
@@ -51,6 +50,8 @@ public class PlacesListFragment extends Fragment implements HttpServiceReceiver.
     private OnPlacesListener mOnPlacesListener;
     private Tracker mTracker;
     private final static String name="PlacesListFragment";
+
+
 
 
     public PlacesListFragment() {
@@ -67,7 +68,7 @@ public class PlacesListFragment extends Fragment implements HttpServiceReceiver.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
+        AnalyticsApplication application = (AnalyticsApplication) mActivity.getApplication();
         mTracker = application.getDefaultTracker();
         setRetainInstance(true);
     }
@@ -95,7 +96,7 @@ public class PlacesListFragment extends Fragment implements HttpServiceReceiver.
             for (Place place : mPlaces) {
                 placeIds.add(place.getPlace_id());
             }
-            ((PlacesListActivity) getActivity()).setPlaces(mPlaces);
+            ((PlacesListActivity) mActivity).setPlaces(mPlaces);
 //            mOnPlacesListener.setPlaces(mPlaces, mPlaceSearchRequest.getLatitude(), mPlaceSearchRequest.getLongitude());
 
 //            Log.d(TAG, PlaceSearchResponse.getUserName());
@@ -110,10 +111,10 @@ public class PlacesListFragment extends Fragment implements HttpServiceReceiver.
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_places_list, container, false);
-        Intent intent = getActivity().getIntent();
+        Intent intent = mActivity.getIntent();
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.pListView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
         if (mPlaceSearchRequest == null && intent != null) {
@@ -134,7 +135,7 @@ public class PlacesListFragment extends Fragment implements HttpServiceReceiver.
         intent.setAction(HttpIntentService.ACTION_SEARCH_PLACES);
         intent.putExtra("request", mPlaceSearchRequest);
         intent.putExtra("receiver", serviceReceiver);
-        this.getActivity().startService(intent);
+        this.mActivity.startService(intent);
 
     }
 
@@ -149,7 +150,7 @@ public class PlacesListFragment extends Fragment implements HttpServiceReceiver.
 
         @Override
         public MyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            LayoutInflater layoutInflater = LayoutInflater.from(mActivity);
             View view = layoutInflater.inflate(R.layout.row_item_place, parent, false);
             return new MyHolder(view);
         }
@@ -161,7 +162,7 @@ public class PlacesListFragment extends Fragment implements HttpServiceReceiver.
             holder.mName.setText(testEntity.getName());
             holder.mRatingBar.setRating(testEntity.getRating());
             holder.bindPlace(testEntity);
-            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            LayoutInflater layoutInflater = LayoutInflater.from(mActivity);
             if (testEntity.getPhotos() != null) {
                 View imgLView = layoutInflater.inflate(R.layout.image_view, null);
                 ImageView imgView = (ImageView) imgLView.findViewById(R.id.imgId);

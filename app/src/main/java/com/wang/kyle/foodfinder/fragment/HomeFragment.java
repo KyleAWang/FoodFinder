@@ -63,7 +63,7 @@ public class HomeFragment extends BaseFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
+        AnalyticsApplication application = (AnalyticsApplication) mActivity.getApplication();
         mTracker = application.getDefaultTracker();
     }
 
@@ -234,7 +234,7 @@ public class HomeFragment extends BaseFragment
         request.setLatitude(mLastLocation.getLatitude());
         request.setLongitude(mLastLocation.getLongitude());
         request.setType("restaurant");
-        Intent intent = PlacesListActivity.newIntent(this.getActivity(), request);
+        Intent intent = PlacesListActivity.newIntent(this.mActivity, request);
         startActivity(intent);
 
     }

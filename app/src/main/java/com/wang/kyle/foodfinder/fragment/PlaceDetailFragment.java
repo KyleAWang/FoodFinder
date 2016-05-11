@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.LruCache;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,7 +45,7 @@ import java.util.List;
 /**
  * Created by Kyle on 5/5/2016.
  */
-public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver.Listener, OnMapReadyCallback {
+public class PlaceDetailFragment extends BaseFragment implements HttpServiceReceiver.Listener, OnMapReadyCallback {
     private final static String TAG = "PlaceDetailFragment";
     private PlaceDetail mPlaceDetail;
     private View mView;
@@ -86,7 +85,7 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
+        AnalyticsApplication application = (AnalyticsApplication) mActivity.getApplication();
         mTracker = application.getDefaultTracker();
         setRetainInstance(true);
 
@@ -104,7 +103,7 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
 
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.detail_listview);
         mRecyclerView.setFocusable(false);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         doSearchDetail();
         return mView;
@@ -241,7 +240,7 @@ public class PlaceDetailFragment extends Fragment implements HttpServiceReceiver
         intent.setAction(HttpIntentService.ACTION_SEARCH_DETAIL);
         intent.putExtra("request", request);
         intent.putExtra("receiver", serviceReceiver);
-        this.getActivity().startService(intent);
+        this.mActivity.startService(intent);
 
     }
 
