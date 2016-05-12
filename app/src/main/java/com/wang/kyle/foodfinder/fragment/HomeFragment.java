@@ -14,6 +14,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -46,6 +48,14 @@ public class HomeFragment extends BaseFragment
     private LocationRequest mLocationRequest;
     private Tracker mTracker;
     private final static String name = "Home Fragment";
+    private TextView view0;
+    private TextView view1;
+    private TextView view2;
+    private TextView view3;
+    private TextView view4;
+    private TextView view5;
+    private TextView view6;
+    private TextView view7;
 
     public void setLastLocation(Location lastLocation) {
         mLastLocation = lastLocation;
@@ -71,6 +81,14 @@ public class HomeFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
+        view0 = (TextView) view.findViewById(R.id.txt0);
+        view1 = (TextView) view.findViewById(R.id.txt1);
+        view2 = (TextView) view.findViewById(R.id.txt2);
+        view3 = (TextView) view.findViewById(R.id.txt3);
+        view4 = (TextView) view.findViewById(R.id.txt4);
+        view5 = (TextView) view.findViewById(R.id.txt5);
+        view6 = (TextView) view.findViewById(R.id.txt6);
+        view7 = (TextView) view.findViewById(R.id.txt7);
 
         final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.autoComView);
 //        String[] countries = getResources().getStringArray(R.array.countries_array);
@@ -131,89 +149,226 @@ public class HomeFragment extends BaseFragment
         return view;
     }
 
+
+
+
     private void buildTextView(View v) {
-        TextView view0 = (TextView) v.findViewById(R.id.txt0);
         view0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPlaceList("restaurant");
+                Animation animatino1 = AnimationUtils.loadAnimation(mActivity.getApplicationContext(), R.anim.scale);
+                animatino1.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        startPlaceList("restaurant");
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                view0.startAnimation(animatino1);
+
                 mTracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Action")
                         .setAction("restaurant")
                         .build());
             }
         });
-        TextView view1 = (TextView) v.findViewById(R.id.txt1);
         view1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPlaceList("pizza");
+                Animation animatino1 = AnimationUtils.loadAnimation(mActivity.getApplicationContext(), R.anim.scale);
+                animatino1.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        startPlaceList("pizza");
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                view1.startAnimation(animatino1);
+
+
+
                 mTracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Action")
                         .setAction("pizza")
                         .build());
             }
         });
-        TextView view2 = (TextView) v.findViewById(R.id.txt2);
         view2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPlaceList("cafe");
+                Animation animatino1 = AnimationUtils.loadAnimation(mActivity.getApplicationContext(), R.anim.scale);
+                animatino1.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        startPlaceList("cafe");
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                view2.startAnimation(animatino1);
+
                 mTracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Action")
                         .setAction("cafe")
                         .build());
             }
         });
-        TextView view3 = (TextView) v.findViewById(R.id.txt3);
         view3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPlaceList("chinese food");
+                Animation animatino1 = AnimationUtils.loadAnimation(mActivity.getApplicationContext(), R.anim.scale);
+                animatino1.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        startPlaceList("chinese food");
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                view3.startAnimation(animatino1);
                 mTracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Action")
                         .setAction("chinese")
                         .build());
             }
         });
-        TextView view4 = (TextView) v.findViewById(R.id.txt4);
         view4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPlaceList("kebabs");
+                Animation animatino1 = AnimationUtils.loadAnimation(mActivity.getApplicationContext(), R.anim.scale);
+                animatino1.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        startPlaceList("kebabs");
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                view4.startAnimation(animatino1);
                 mTracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Action")
                         .setAction("kebabs")
                         .build());
             }
         });
-        TextView view5 = (TextView) v.findViewById(R.id.txt5);
         view5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPlaceList("steak");
+                Animation animatino1 = AnimationUtils.loadAnimation(mActivity.getApplicationContext(), R.anim.scale);
+                animatino1.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        startPlaceList("steak");
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                view5.startAnimation(animatino1);
                 mTracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Action")
                         .setAction("steak")
                         .build());
             }
         });
-        TextView view6 = (TextView) v.findViewById(R.id.txt6);
         view6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPlaceList("pasta");
+                Animation animatino1 = AnimationUtils.loadAnimation(mActivity.getApplicationContext(), R.anim.scale);
+                animatino1.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        startPlaceList("pasta");
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                view6.startAnimation(animatino1);
                 mTracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Action")
                         .setAction("pasta")
                         .build());
             }
         });
-        TextView view7 = (TextView) v.findViewById(R.id.txt7);
         view7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPlaceList("chicken");
+                Animation animatino1 = AnimationUtils.loadAnimation(mActivity.getApplicationContext(), R.anim.scale);
+                animatino1.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        startPlaceList("chicken");
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                view7.startAnimation(animatino1);
+//                startPlaceList("chicken");
                 mTracker.send(new HitBuilders.EventBuilder()
                         .setCategory("Action")
                         .setAction("chicken")
